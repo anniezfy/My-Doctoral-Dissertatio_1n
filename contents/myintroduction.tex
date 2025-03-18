@@ -1,111 +1,134 @@
 \chapter[\hspace{0pt}绪\hskip\ccwd{}论]{{\CJKfontspec{SimHei}\zihao{3}\hspace{-5pt}绪\hskip\ccwd{}论}}
 \section[\hspace{-2pt}课题背景与研究意义]{{\CJKfontspec{SimHei}\zihao{-3} \hspace{-8pt}课题背景与研究意义}}\label{section 1-1}
 随着通信应用的快速发展，通信技术正经历着一场划时代的变革。
-5G通信技术成为新一代通信技术的主流，其高速、低时延的特性广泛应用于无人驾驶、智慧医疗、工业物联网等多个领域。\cite{10201911032}
+5G已成为新一代通信核心技术，
+其高速、低时延的特性广泛应用于无人驾驶、智慧医疗、工业物联网等多个领域 \cite{10201911032}。其中，快速傅立叶变换(Fast Fourier Transfirn)
+作为一种高效的信号处理算法，在现代5G通信系统中发挥着至关重要的作用\cite{1019620369.nh}。
+5G,通信,OFDM,军事侦查，探测准确性
 
-\section[\hspace{-2pt}国内外研究现状]{{\CJKfontspec{SimHei}\zihao{-3} \hspace{-8pt}国内外研究现状}}\label{section 1-2}
+FFT算法是由离散傅立叶变换(Discreate Fourier Transform,DFT )演变而来，降低了算法的复杂度并且提高计算效率，
+能实现信号在时域和频域之间的快速变换。
+此外，FFT算法还适用于5G通行领域，能够在高速数据传输和多用户接入场景下有效降低运算延迟，提高系统吞吐率。
+在现代通信系统中，正交分频复用(Orthogonal Frequency Division Multiplexing,OFDM)技术\cite{1023142698.nh}借助 FFT 进行解调，
+使带宽资源分配更加灵活，并有效缓解多径干扰的影响。
+为了满足5G对高数据率传输的需求，需要结合先进的FPGA硬件加速平台设计低延迟的FFT硬件架构，
+从而为未来6G等更高标准的通信系统奠定坚实基础。在雷达应用场景中\cite{GLGL2025030701Q}\cite{JSJG202411001015},
+FFT算法广泛应用于毫米波雷达和激光雷达系统中，能够实现高精度的目标检测。随着传感器灵明度提升，单位时间内会采样更多点数，
+这将要求FFT处理器具备处理大点数的能力。
+因此，在FPGA边缘计算领域中，低延迟的大点数FFT处理器在军事侦察系统、雷达信号处理系统领域中具有重要研究意义。
 
-本章节将首先介绍车联网的相关概念及其发展历程。接着，以智慧全息路口为例，介绍车载信息物理融合系统，并分析其中所面临的挑战。
+除此之外，FFT算法还适用于图像处理领域，随着医学成像、卫星遥感\cite{ZGTB201912003}\cite{DATE202009021}
+领域数据量的爆发式增长，传统的1024点FFT处理器已无法满足需求,
+高分辨率的亿级像素遥感影像需要高达16TB的存储空间以及单幅4K图像经FFT转换后存储空间激增至原始的2-3倍，因此
+需要有足够多的存储空间和计算资源来处理大规模的图像数据。
+除此之外，FPGA作为边缘加速设备，可以提高图像处理的效率同时为
+开发人员提供硬件层面的可编程性。
+为FFT加速器设计提供广泛的设计空间\cite{HKLD202302010}，
+其中包括RTL仿真、原型验证、板级验证和存储缓冲区设计等。基于上述描述的问题，
+在FPGA平台上设计处理大数据量的FFT处理器，有利于快速原型验证并且突破传统FFT处理器的性能瓶颈。
 
-\begin{figure}[h]
-	\centering
-	\captionsetup{font={small, stretch=1.312}}
-\includegraphics[width=1\columnwidth]{Fig1-1-V2X.pdf}
-	\bicaption[车联网演进方向]{车联网演进方向}[Evolution direction of the Internet of Vehicles]{Evolution direction of the Internet of Vehicles}
-	\label{fig 1-1}
-\end{figure}
+现有主流的FFT架构分为两大类分别是流水线架构和存储架构,流水线架构的特点是低延迟，吞吐量高，适用于实施任务场景。
 
-车联网是物联网（Internet of Things, IoT）技术在汽车领域的应用形式。早在2G/3G移动网络时代，车联网已应用于利用全球导航卫星系统（Global Navigation Satellite System, GNSS）的定位信息为车辆提供防盗和救援服务。如今，智能网联汽车（如宝马、比亚迪、福特、通用、蔚来以及特斯拉等）都支持空中下载（Over-the-Air, OTA）技术对车机系统进行在线更新。如图 \ref{fig 1-1} 所示，随着汽车朝着智能化、网联化、协同化方向发展，传统的面向信息服务的\qthis{车联网}已经转变为与万物互联互通的V2X（Vehicle-to-Everything）车联网。具体而言，V2X车联网是指多种通讯方式的融合，包括车辆间通讯（Vehicle-to-Vehicle, V2V）、车辆与行人通讯（Vehicle-to-Pedestrian, V2P）、车辆与基础设施通讯（Vehicle-to-Infrastructure, V2I）以及车辆与云端通讯（Vehicle-to-Cloud, V2C）。车联网利用实时数据分发，实现人、车、路等交通要素的协同配合，最终实现\qthis{聪明的车、智慧的路、协同的云}。此外，车联网还能促进基于单车智能的自动驾驶技术发展，通过车联网通信协助自动驾驶发现潜在危险，提升道路安全。随着我国车联网产业在政策规划、标准体系建设、关键技术研发、应用示范和基础设施建设等多方面的稳步发展，车联网的内涵和外延也在不断发展演进。依托快速落地的新型基础设施建设，车联网不仅广泛服务于智能网联汽车的辅助驾驶、自动驾驶等不同应用，还拓展服务于智慧矿山、智慧港口等企业生产环节以及智慧交通、智慧城市等社会治理领域\cite{zhong2021che}。
 
-\begin{figure}[h]
-	\centering
-	\captionsetup{font={small, stretch=1.312}}
-\includegraphics[width=0.95\columnwidth]{Fig1-2-V2X-evolution.pdf}
-	\bicaption[3GPP C-V2X 标准演进]{3GPP C-V2X 标准演进}[3GPP C-V2X standard evolution]{3GPP C-V2X standard evolution}
-	\label{fig 1-2}
-\end{figure}
+% \begin{figure}[h]
+% 	\centering
+% 	\captionsetup{font={small, stretch=1.312}}
+% \includegraphics[width=1\columnwidth]{Fig1-1-V2X.pdf}
+% 	\bicaption[车联网演进方向]{车联网演进方向}[Evolution direction of the Internet of Vehicles]{Evolution direction of the Internet of Vehicles}
+% 	\label{fig 1-1}
+% \end{figure}
 
-在车联网通信标准方面，电气和电子工程师协会（Institute of Electrical and Electronics Engineers, IEEE）在2003年提出了专用短距通信技术（Dedicated Short-Range Communication, DSRC）。2010年，IEEE发布了名为无线接入车载环境（Wireless Access in Vehicular Environments, WAVE）的协议栈，其中包括IEEE 802.11p、IEEE 1609.1/.2/.3/.4协议族和SAE J2735消息集字典 \cite{wu2013vehicular}。同时，基于长期演进（Long-Term Evolution, LTE）的V2X通信已形成完善的技术标准体系和产业链\cite{chen2016lte}。此外，IMT-2020（5G）推进组成立了C-V2X工作组，加速基于5G的V2X通信的演进。如图 \ref{fig 1-2} 所示，国际标准组织第三代合作伙伴计划（The 3rd Generation Partnership Project, 3GPP）在2018年启动基于5G新空口（New Radio, NR）的V2X标准研究，并在2020年完成了Rel-16版本的5G NR-V2X标准\cite{saad2021advancements}，Rel-17版本进一步优化了功率控制、资源调度等相关技术。5G 汽车协会（5G Automotive Association, 5GAA)、下一代移动通信网络（Next Generation Mobile Network, NGMN）联盟以及5G Americas对IEEE 802.11p和C-V2X进行了技术对比，表\ref{table 1_1}显示C-V2X在传输时延、范围、速率以及可靠性等方面具有显著优势。目前，我国LTE-V2X产业蓬勃发展，与DSRC技术路线之争取得了重大进展。我国已建成基于LTE-V2X技术的完备产业链，芯片、模组、车载终端（Onboard Unit, OBU）、路侧设备（Roadside Unit, RSU）等均已成熟且经过了\qthis{三跨}\qthis{四跨}\qthis{新四跨}以及大规模测试，满足了商用部署条件。
+% 车联网是物联网（Internet of Things, IoT）技术在汽车领域的应用形式。早在2G/3G移动网络时代，车联网已应用于利用全球导航卫星系统（Global Navigation Satellite System, GNSS）的定位信息为车辆提供防盗和救援服务。如今，智能网联汽车（如宝马、比亚迪、福特、通用、蔚来以及特斯拉等）都支持空中下载（Over-the-Air, OTA）技术对车机系统进行在线更新。如图 \ref{fig 1-1} 所示，随着汽车朝着智能化、网联化、协同化方向发展，传统的面向信息服务的\qthis{车联网}已经转变为与万物互联互通的V2X（Vehicle-to-Everything）车联网。具体而言，V2X车联网是指多种通讯方式的融合，包括车辆间通讯（Vehicle-to-Vehicle, V2V）、车辆与行人通讯（Vehicle-to-Pedestrian, V2P）、车辆与基础设施通讯（Vehicle-to-Infrastructure, V2I）以及车辆与云端通讯（Vehicle-to-Cloud, V2C）。车联网利用实时数据分发，实现人、车、路等交通要素的协同配合，最终实现\qthis{聪明的车、智慧的路、协同的云}。此外，车联网还能促进基于单车智能的自动驾驶技术发展，通过车联网通信协助自动驾驶发现潜在危险，提升道路安全。随着我国车联网产业在政策规划、标准体系建设、关键技术研发、应用示范和基础设施建设等多方面的稳步发展，车联网的内涵和外延也在不断发展演进。依托快速落地的新型基础设施建设，车联网不仅广泛服务于智能网联汽车的辅助驾驶、自动驾驶等不同应用，还拓展服务于智慧矿山、智慧港口等企业生产环节以及智慧交通、智慧城市等社会治理领域\cite{zhong2021che}。
 
-\begin{table}[h]\small
-\setstretch{1.245} %设置具有指定弹力的橡皮长度（原行宽的1.2倍）
-\captionsetup{font={small, stretch=1.512}}
-\centering
-\bicaption[C-V2X和IEEE 802.11p技术对比]{C-V2X和IEEE 802.11p技术对比\cite{cheng2021feng}}[Technical comparisons of C-V2X and IEEE 802.11p]{Technical comparisons of C-V2X and IEEE 802.11p \cite{cheng2021feng}}
-\label{table 1_1}
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{@{}ccccc@{}}
-\toprule
-\begin{tabular}[c]{@{}c@{}}C-V2X\\ 技术优势\end{tabular} &
- \begin{tabular}[c]{@{}c@{}}具体技术\\ 或性能\end{tabular} &
-IEEE 802.11p &
-\begin{tabular}[c]{@{}c@{}}LTE-V2X\\ (3GPP R14/R15)\end{tabular} &
-\begin{tabular}[c]{@{}c@{}}NR-V2X\\ (3GPP R16)\end{tabular} \\ \midrule
-低时延 &
-  时延 &
-  不确定时延 &
-  \begin{tabular}[c]{@{}c@{}}R14: 20ms\\ R15: 10ms\end{tabular} &
-  3ms \\ 
-\begin{tabular}[c]{@{}c@{}}低时延/\\ 高可靠\end{tabular} &
-  \begin{tabular}[c]{@{}c@{}}资源分配\\ 机制\end{tabular} &
-  CSMA/CA &
-  \begin{tabular}[c]{@{}c@{}}支持感知+半持续\\ 调度和动态调度\end{tabular} &
-  \begin{tabular}[c]{@{}c@{}}支持感知+半持续\\ 调度和动态调度\end{tabular} \\ 
-\multirow{3}{*}[3.4ex]{高可靠} &
-  可靠性 &
-  不保证可靠性 &
-  \begin{tabular}[c]{@{}c@{}}R14: \textgreater{}90\%\\ R15: \textgreater{}95\%\end{tabular} &
-  支持99.999\% \\  
- &
-  信道编码 &
-  卷积码 &
-  Turbo &
-  LDPC \\ 
- &
-  重传机制 &
-  不支持 &
-  \begin{tabular}[c]{@{}c@{}}支持HARQ，\\ 固定2次传输\end{tabular} &
-  \begin{tabular}[c]{@{}c@{}}支持HARQ，\\ 传输次数灵活，\\ 最大支持32次传输\end{tabular} \\ 
-\multirow{2}{*}[0ex]{\begin{tabular}[c]{@{}c@{}}更远传输\\ 范围\end{tabular}} &
-  通信范围 &
-  100m &
-  \begin{tabular}[c]{@{}c@{}}R14: 320m\\ R15: 500m\end{tabular} &
-  1000m \\  
- &
-  波形 &
-  OFDM &
-  \begin{tabular}[c]{@{}c@{}}单载波频分复用\\ (SC-FDM)\end{tabular} &
-  循环前缀（CP)-OFDM \\ 
-\multirow{2}{*}[1.5ex]{\begin{tabular}[c]{@{}c@{}}更高传输\\ 速率\end{tabular}} &
-  \begin{tabular}[c]{@{}c@{}}数据传输\\ 速率\end{tabular} &
-  典型6Mbit/s &
-  \begin{tabular}[c]{@{}c@{}}R14: 约30Mbit/s\\ R15: 约300Mbit/s\end{tabular} &
-  \begin{tabular}[c]{@{}c@{}}与带宽有关，40MHz\\ 时R16单载波2层数据\\ 传输支持约400Mbit/s,\\ 多载波情况下更高\end{tabular} \\ 
- &
-  调制方式 &
-  64QAM &
-  64QAM &
-  256QAM \\ \bottomrule
-\end{tabular}%
-}
-\end{table}
+% \begin{figure}[h]
+% 	\centering
+% 	\captionsetup{font={small, stretch=1.312}}
+% \includegraphics[width=0.95\columnwidth]{Fig1-2-V2X-evolution.pdf}
+% 	\bicaption[3GPP C-V2X 标准演进]{3GPP C-V2X 标准演进}[3GPP C-V2X standard evolution]{3GPP C-V2X standard evolution}
+% 	\label{fig 1-2}
+% \end{figure}
 
-\begin{figure}[h] 
-	\centering
-	\captionsetup{font={small, stretch=1.312}}\includegraphics[width=1\columnwidth]{Fig1-3-intersection.pdf}
-	\bicaption[基于车载信息物理融合的智慧全息路口]{基于车载信息物理融合的智慧全息路口}[Intelligent holographic intersection based vehicular cyber-physical fusion]{Intelligent holographic intersection based vehicular cyber-physical fusion}
-	\label{fig 1-3}
-\end{figure}
+% 在车联网通信标准方面，电气和电子工程师协会（Institute of Electrical and Electronics Engineers, IEEE）在2003年提出了专用短距通信技术（Dedicated Short-Range Communication, DSRC）。2010年，IEEE发布了名为无线接入车载环境（Wireless Access in Vehicular Environments, WAVE）的协议栈，其中包括IEEE 802.11p、IEEE 1609.1/.2/.3/.4协议族和SAE J2735消息集字典 \cite{wu2013vehicular}。同时，基于长期演进（Long-Term Evolution, LTE）的V2X通信已形成完善的技术标准体系和产业链\cite{chen2016lte}。此外，IMT-2020（5G）推进组成立了C-V2X工作组，加速基于5G的V2X通信的演进。如图 \ref{fig 1-2} 所示，国际标准组织第三代合作伙伴计划（The 3rd Generation Partnership Project, 3GPP）在2018年启动基于5G新空口（New Radio, NR）的V2X标准研究，并在2020年完成了Rel-16版本的5G NR-V2X标准\cite{saad2021advancements}，Rel-17版本进一步优化了功率控制、资源调度等相关技术。5G 汽车协会（5G Automotive Association, 5GAA)、下一代移动通信网络（Next Generation Mobile Network, NGMN）联盟以及5G Americas对IEEE 802.11p和C-V2X进行了技术对比，表\ref{table 1_1}显示C-V2X在传输时延、范围、速率以及可靠性等方面具有显著优势。目前，我国LTE-V2X产业蓬勃发展，与DSRC技术路线之争取得了重大进展。我国已建成基于LTE-V2X技术的完备产业链，芯片、模组、车载终端（Onboard Unit, OBU）、路侧设备（Roadside Unit, RSU）等均已成熟且经过了\qthis{三跨}\qthis{四跨}\qthis{新四跨}以及大规模测试，满足了商用部署条件。
 
-如图 \ref{fig 1-3} 所示，智慧全息路口是基于车载信息物理融合技术的智慧交通管理系统。它通过将城市道路上的全要素进行数字化还原，为各类智能交通系统应用提供数据支撑。智慧全息路口利用道路基础设施和智能网联汽车上搭载的激光雷达、毫米波雷达、摄像头等多源传感设备，对路口进行全方位感知和全要素采集。通过传感设备实时感知交通流量、车速、车道变化等数据，并结合高精度地图呈现路口数字化上帝视角，精准刻画路口上的每一条车道、每一个交通信息灯的状态，以及每一辆车的行为轨迹。在实现路口全要素数字化还原的过程中，采用车载边缘计算技术将异构感知数据在边缘节点进行融合处理，从而提高数据处理速度，降低数据传输成本。同时，利用目标检测、目标跟踪、行为分析等算法对感知数据进行预处理，进一步提高数据准确性和精度，为后续的交通管理、交通安全和交通规划等应用提供更可靠的数据基础。
+% \begin{table}[h]\small
+% \setstretch{1.245} %设置具有指定弹力的橡皮长度（原行宽的1.2倍）
+% \captionsetup{font={small, stretch=1.512}}
+% \centering
+% \bicaption[C-V2X和IEEE 802.11p技术对比]{C-V2X和IEEE 802.11p技术对比\cite{cheng2021feng}}[Technical comparisons of C-V2X and IEEE 802.11p]{Technical comparisons of C-V2X and IEEE 802.11p \cite{cheng2021feng}}
+% \label{table 1_1}
+% \resizebox{\columnwidth}{!}{%
+% \begin{tabular}{@{}ccccc@{}}
+% \toprule
+% \begin{tabular}[c]{@{}c@{}}C-V2X\\ 技术优势\end{tabular} &
+%  \begin{tabular}[c]{@{}c@{}}具体技术\\ 或性能\end{tabular} &
+% IEEE 802.11p &
+% \begin{tabular}[c]{@{}c@{}}LTE-V2X\\ (3GPP R14/R15)\end{tabular} &
+% \begin{tabular}[c]{@{}c@{}}NR-V2X\\ (3GPP R16)\end{tabular} \\ \midrule
+% 低时延 &
+%   时延 &
+%   不确定时延 &
+%   \begin{tabular}[c]{@{}c@{}}R14: 20ms\\ R15: 10ms\end{tabular} &
+%   3ms \\ 
+% \begin{tabular}[c]{@{}c@{}}低时延/\\ 高可靠\end{tabular} &
+%   \begin{tabular}[c]{@{}c@{}}资源分配\\ 机制\end{tabular} &
+%   CSMA/CA &
+%   \begin{tabular}[c]{@{}c@{}}支持感知+半持续\\ 调度和动态调度\end{tabular} &
+%   \begin{tabular}[c]{@{}c@{}}支持感知+半持续\\ 调度和动态调度\end{tabular} \\ 
+% \multirow{3}{*}[3.4ex]{高可靠} &
+%   可靠性 &
+%   不保证可靠性 &
+%   \begin{tabular}[c]{@{}c@{}}R14: \textgreater{}90\%\\ R15: \textgreater{}95\%\end{tabular} &
+%   支持99.999\% \\  
+%  &
+%   信道编码 &
+%   卷积码 &
+%   Turbo &
+%   LDPC \\ 
+%  &
+%   重传机制 &
+%   不支持 &
+%   \begin{tabular}[c]{@{}c@{}}支持HARQ，\\ 固定2次传输\end{tabular} &
+%   \begin{tabular}[c]{@{}c@{}}支持HARQ，\\ 传输次数灵活，\\ 最大支持32次传输\end{tabular} \\ 
+% \multirow{2}{*}[0ex]{\begin{tabular}[c]{@{}c@{}}更远传输\\ 范围\end{tabular}} &
+%   通信范围 &
+%   100m &
+%   \begin{tabular}[c]{@{}c@{}}R14: 320m\\ R15: 500m\end{tabular} &
+%   1000m \\  
+%  &
+%   波形 &
+%   OFDM &
+%   \begin{tabular}[c]{@{}c@{}}单载波频分复用\\ (SC-FDM)\end{tabular} &
+%   循环前缀（CP)-OFDM \\ 
+% \multirow{2}{*}[1.5ex]{\begin{tabular}[c]{@{}c@{}}更高传输\\ 速率\end{tabular}} &
+%   \begin{tabular}[c]{@{}c@{}}数据传输\\ 速率\end{tabular} &
+%   典型6Mbit/s &
+%   \begin{tabular}[c]{@{}c@{}}R14: 约30Mbit/s\\ R15: 约300Mbit/s\end{tabular} &
+%   \begin{tabular}[c]{@{}c@{}}与带宽有关，40MHz\\ 时R16单载波2层数据\\ 传输支持约400Mbit/s,\\ 多载波情况下更高\end{tabular} \\ 
+%  &
+%   调制方式 &
+%   64QAM &
+%   64QAM &
+%   256QAM \\ \bottomrule
+% \end{tabular}%
+% }
+% \end{table}
 
-智慧全息路口不仅可以实现路口全要素数字化还原，而且可以进一步作为车载信息物理融合系统的外在展示和数据内核，支撑各种智能交通系统的应用。例如，全息路口可以为公交优先通行、绿波通行、弱势道路参与者（Vulnerable Road User, VRU）感知等 ITS 应用提供强有力的支持。在公交优先通行方面，全息路口可以根据公交车的实时位置和行驶速度，并结合路口的交通状况，提前调整信号控制策略，使公交车获得更好的通行效率和服务。在绿波通行方面，全息路口可以通过感知路口的交通流量和车速等信息，实现路口绿灯时长的自适应调整，从而实现车辆在绿波通信路段上的高效通行。在 VRU 感知方面，全息路口可以利用摄像头等传感设备或V2P通信感知VRU（如行人、自行车、残疾人等）的存在和行动轨迹，提供实时的路口状态信息和预警信息，保障弱势道路参与者的通行便利和交通安全。
+% \begin{figure}[h] 
+% 	\centering
+% 	\captionsetup{font={small, stretch=1.312}}\includegraphics[width=1\columnwidth]{Fig1-3-intersection.pdf}
+% 	\bicaption[基于车载信息物理融合的智慧全息路口]{基于车载信息物理融合的智慧全息路口}[Intelligent holographic intersection based vehicular cyber-physical fusion]{Intelligent holographic intersection based vehicular cyber-physical fusion}
+% 	\label{fig 1-3}
+% \end{figure}
 
-通过以上讨论可知，车载信息物理融合系统是实现各类ITS应用的基础。然而，在高异构、高动态、分布式的车联网中，实现车载信息物理融合系统以满足多元ITS应用需求仍然面临着诸多问题和挑战。因此，针对以上问题和挑战，需要进一步展开全面深入的研究。具体地，首先，异构车联网亟需服务架构融合创新，并设计车载信息物理融合质量指标。未来车联网是多服务范式并存的高异构移动网络，因此需要研究异构车联网融合服务架构，以最大化不同服务范式的协同效应，并支持VCPS的部署实现。同时，现有研究都没有对VCPS进行整体深入的评估。因此，需要设计基于多源异质感知信息融合的VCPS质量指标，并通过控制车辆感知行为与资源分配提升VCPS系统质量。其次，异构资源亟需协同优化。车联网中的通信和计算资源分布在不同的车辆和基础设施中，因此需要针对异构资源进行协同优化，支持VCPS中计算任务分布式处理，以进一步提升系统服务质量。再次，车载信息物理融合系统亟需质量-开销均衡优化。车载信息物理融合系统需要在保证实时性和准确性的同时，考虑资源开销和能耗问题。因此，需要研究质量-开销均衡的优化策略，以提高系统的资源利用率的同时降低能耗。最后，亟需实现原型系统以验证VCPS性能。通过在真实车联网环境中搭建原型系统，可以进一步验证车载信息物理融合系统的可行性和有效性，为其在实际应用中提供更可靠的支持和保障。
+% 如图 \ref{fig 1-3} 所示，智慧全息路口是基于车载信息物理融合技术的智慧交通管理系统。它通过将城市道路上的全要素进行数字化还原，为各类智能交通系统应用提供数据支撑。智慧全息路口利用道路基础设施和智能网联汽车上搭载的激光雷达、毫米波雷达、摄像头等多源传感设备，对路口进行全方位感知和全要素采集。通过传感设备实时感知交通流量、车速、车道变化等数据，并结合高精度地图呈现路口数字化上帝视角，精准刻画路口上的每一条车道、每一个交通信息灯的状态，以及每一辆车的行为轨迹。在实现路口全要素数字化还原的过程中，采用车载边缘计算技术将异构感知数据在边缘节点进行融合处理，从而提高数据处理速度，降低数据传输成本。同时，利用目标检测、目标跟踪、行为分析等算法对感知数据进行预处理，进一步提高数据准确性和精度，为后续的交通管理、交通安全和交通规划等应用提供更可靠的数据基础。
 
-\section[\hspace{-2pt}研究动机]{{\CJKfontspec{SimHei}\zihao{-3} \hspace{-8pt}研究动机}}\label{section 1-3}
+% 智慧全息路口不仅可以实现路口全要素数字化还原，而且可以进一步作为车载信息物理融合系统的外在展示和数据内核，支撑各种智能交通系统的应用。例如，全息路口可以为公交优先通行、绿波通行、弱势道路参与者（Vulnerable Road User, VRU）感知等 ITS 应用提供强有力的支持。在公交优先通行方面，全息路口可以根据公交车的实时位置和行驶速度，并结合路口的交通状况，提前调整信号控制策略，使公交车获得更好的通行效率和服务。在绿波通行方面，全息路口可以通过感知路口的交通流量和车速等信息，实现路口绿灯时长的自适应调整，从而实现车辆在绿波通信路段上的高效通行。在 VRU 感知方面，全息路口可以利用摄像头等传感设备或V2P通信感知VRU（如行人、自行车、残疾人等）的存在和行动轨迹，提供实时的路口状态信息和预警信息，保障弱势道路参与者的通行便利和交通安全。
 
-车载信息物理融合系统是实现各类智能交通系统应用的基础，其已成为国内外学术界研究的热点之一。本章节将对国内外相关研究工作进行梳理和总结，并从以下几个方面进行详细阐述：
+% 通过以上讨论可知，车载信息物理融合系统是实现各类ITS应用的基础。然而，在高异构、高动态、分布式的车联网中，实现车载信息物理融合系统以满足多元ITS应用需求仍然面临着诸多问题和挑战。因此，针对以上问题和挑战，需要进一步展开全面深入的研究。具体地，首先，异构车联网亟需服务架构融合创新，并设计车载信息物理融合质量指标。未来车联网是多服务范式并存的高异构移动网络，因此需要研究异构车联网融合服务架构，以最大化不同服务范式的协同效应，并支持VCPS的部署实现。同时，现有研究都没有对VCPS进行整体深入的评估。因此，需要设计基于多源异质感知信息融合的VCPS质量指标，并通过控制车辆感知行为与资源分配提升VCPS系统质量。其次，异构资源亟需协同优化。车联网中的通信和计算资源分布在不同的车辆和基础设施中，因此需要针对异构资源进行协同优化，支持VCPS中计算任务分布式处理，以进一步提升系统服务质量。再次，车载信息物理融合系统亟需质量-开销均衡优化。车载信息物理融合系统需要在保证实时性和准确性的同时，考虑资源开销和能耗问题。因此，需要研究质量-开销均衡的优化策略，以提高系统的资源利用率的同时降低能耗。最后，亟需实现原型系统以验证VCPS性能。通过在真实车联网环境中搭建原型系统，可以进一步验证车载信息物理融合系统的可行性和有效性，为其在实际应用中提供更可靠的支持和保障。
+
+% \section[\hspace{-2pt}研究动机]{{\CJKfontspec{SimHei}\zihao{-3} \hspace{-8pt}研究动机}}\label{section 1-3}
+
+% 车载信息物理融合系统是实现各类智能交通系统应用的基础，其已成为国内外学术界研究的热点之一。本章节将对国内外相关研究工作进行梳理和总结，并从以下几个方面进行详细阐述：
 
 % \subsection[\hspace{-2pt}车联网服务架构研究与现状]{{\CJKfontspec{SimHei}\zihao{4} \hspace{-8pt}车联网服务架构研究与现状}}
 
